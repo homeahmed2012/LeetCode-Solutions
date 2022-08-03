@@ -1,44 +1,31 @@
 public class Solution {
-    Dictionary<int, List<int>> adjList;
-    HashSet<int> visited;
     public int NumIslands(char[][] grid) {
         int n = grid.Length; 
         int m = grid[0].Length;
-        adjList = new Dictionary<int, List<int>>();
-        visited = new HashSet<int>();
-        
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(grid[i][j] == '1'){
-                    var temp = new List<int>();
-                    if(i > 0 && grid[i-1][j] == '1') temp.Add((i-1) *m +j);
-                    if(i < n-1 && grid[i+1][j] == '1') temp.Add((i+1) *m +j);
-                    if(j > 0 && grid[i][j-1] == '1') temp.Add(i *m +j -1);
-                    if(j < m-1 && grid[i][j+1] == '1') temp.Add(i *m +j +1);
-                    adjList.Add(i*m+j, temp);
-                }
-            }
-        }
         
         int count = 0;
         for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
-                if(grid[i][j] == '1' && !visited.Contains(i*m+j)){
+                if(grid[i][j] == '1'){
                     count++;
-                    DFS(i*m+j);
-                }    
-            
+                    DFS(grid, i, j);
+                }
             }
         }
+        
         return count;
         
     }
     
-    public void DFS(int node){
-        visited.Add(node);
-        foreach(var item in adjList[node]){
-            if(!visited.Contains(item))
-                DFS(item);
-        }
+    public void DFS(char[][] grid, int i, int j){
+        if(i < 0 || i >= grid.Length || j < 0 || j >= grid[0].Length || grid[i][j] == '0')
+            return;
+        grid[i][j] = '0';
+        
+        DFS(grid, i-1, j);
+        DFS(grid, i+1, j);
+        DFS(grid, i, j-1);
+        DFS(grid, i, j+1);
+        
     }
 }
